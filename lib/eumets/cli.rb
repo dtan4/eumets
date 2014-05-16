@@ -35,7 +35,10 @@ module Eumets
     def list(options = {})
       tasklists = call_api(@tasks_client.tasklists.list, options)[:items]
       tasklists.inject([]) do |tasks, tasklist|
-        tasks << call_api(@tasks_client.tasks.list, tasklist: tasklist[:id])[:items]
+        call_api(@tasks_client.tasks.list, tasklist: tasklist[:id])[:items].each do |task|
+          tasks << Task.new(task)
+        end
+
         tasks
       end.flatten
     end
