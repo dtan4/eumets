@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require "eumets"
+
+client = Eumets::Cli.new
+client.authorize!
+puts client.list

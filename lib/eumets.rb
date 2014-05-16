@@ -1,3 +1,4 @@
+require "eumets/cli"
 require "eumets/version"
 
 module Eumets
