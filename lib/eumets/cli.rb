@@ -33,10 +33,11 @@ module Eumets
     end
 
     def list(options = {})
-      JSON.parse(
-                 @api_client.execute(@tasks_client.tasklists.list, options).response.body,
-                 symbolize_names: true
-                )
+      tasklists = call_api(@tasks_client.tasklists.list, options)[:items]
+      tasklists.inject([]) do |tasks, tasklist|
+        tasks << call_api(@tasks_client.tasks.list, tasklist: tasklist[:id])[:items]
+        tasks
+      end.flatten
     end
 
     private
@@ -47,6 +48,13 @@ module Eumets
 
     def get_tasks_client
       @api_client.discovered_api("tasks", "v1")
+    end
+
+    def call_api(method, options = {})
+      JSON.parse(
+                 @api_client.execute(method, options).response.body,
+                 symbolize_names: true
+                )
     end
   end
 end

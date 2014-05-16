@@ -1,7 +1,10 @@
 #!/usr/bin/env ruby
 
 require "eumets"
+require "time"
 
 client = Eumets::Cli.new
 client.authorize!
-puts client.list
+client.list.each do |task|
+  puts "#{Time.parse(task[:due]).localtime}, #{task[:title]}"
+end
