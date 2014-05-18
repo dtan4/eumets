@@ -1,4 +1,7 @@
 # Eumets
+[![Build Status](https://travis-ci.org/dtan4/eumets.svg?branch=master)](https://travis-ci.org/dtan4/eumets)
+[![Coverage Status](https://img.shields.io/coveralls/dtan4/eumets.svg)](https://coveralls.io/r/dtan4/eumets?branch=master)
+[![Code Climate](https://codeclimate.com/github/dtan4/eumets.png)](https://codeclimate.com/github/dtan4/eumets)
 
 TODO: Write a gem description
 
