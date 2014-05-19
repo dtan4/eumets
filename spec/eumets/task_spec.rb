@@ -1,55 +1,63 @@
-# -*- coding: utf-8 -*-
 require "spec_helper"
 require "time"
 
 module Eumets
   describe Task do
-    let(:completed_params) do
+    let(:tasklist_id) do
+      "tasklist_id"
+    end
+
+    let(:params) do
       {
+       kind: "tasks#task",
        id: "id",
+       etag: "etag",
        title: "title",
        updated: "2014-05-18",
+       selfLink: "selfLink",
+       parent: "parent",
+       method: "method",
        notes: "notes",
        status: "completed",
-       due: "2014-05-18"
+       due: "2014-05-18",
+       hidden: false,
+       links: []
       }
     end
 
+    let(:completed_params) do
+      params[:status] = "completed"
+      params
+    end
+
     let(:incompleted_params) do
-      {
-       id: "id",
-       title: "title",
-       updated: "2014-05-18",
-       notes: "notes",
-       status: "needsAction",
-       due: "2014-05-18"
-      }
+      params[:status] = "needsAction"
+      params
     end
 
     describe "#initialize" do
       it "should set instance variables" do
-        task = described_class.new(completed_params)
+        task = described_class.new(tasklist_id, completed_params)
         expect(task.id).to eq "id"
         expect(task.title).to eq "title"
-        expect(task.updated).to eq Time.parse(completed_params[:updated])
+        expect(task.updated).to eq "2014-05-18"
         expect(task.notes).to eq "notes"
-        expect(task.completed).to be_true
-        expect(task.due).to eq Time.parse(completed_params[:due])
+        expect(task.status).to eq "completed"
       end
     end
 
     describe "#status_icon" do
       context "when the complete status is true" do
-        it "should return ○" do
-          task = described_class.new(completed_params)
-          expect(task.status_icon).to eq "○"
+        it "should return x" do
+          task = described_class.new(tasklist_id, completed_params)
+          expect(task.status_icon).to eq "x"
         end
       end
 
       context "when the complete status is false" do
-        it "should return ×" do
-          task = described_class.new(incompleted_params)
-          expect(task.status_icon).to eq "×"
+        it "should return -" do
+          task = described_class.new(tasklist_id, incompleted_params)
+          expect(task.status_icon).to eq "-"
         end
       end
     end

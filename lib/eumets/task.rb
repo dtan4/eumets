@@ -1,21 +1,15 @@
-# -*- coding: utf-8 -*-
+require "ostruct"
 require "time"
 
 module Eumets
-  class Task
-    attr_reader :id, :title, :updated, :notes, :completed, :due
-
-    def initialize(params)
-      @id = params[:id]
-      @title = params[:title]
-      @updated = Time.parse(params[:updated])
-      @notes = params[:notes]
-      @completed = (params[:status] == "completed")
-      @due = Time.parse(params[:due])
+  class Task < OpenStruct
+    def initialize(tasklist_id, params)
+      super(params)
+      self.tasklist_id = tasklist_id
     end
 
     def status_icon
-      @completed ? "○" : "×"
+      self.status == "completed" ? "x" : "-"
     end
   end
 end
