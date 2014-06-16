@@ -6,5 +6,5 @@ require "time"
 client = Eumets::Cli.new
 client.authorize!
 client.list.each do |task|
-  puts "#{task.status_icon}, #{task.due.localtime}, #{task.title}"
+  task.show
 end

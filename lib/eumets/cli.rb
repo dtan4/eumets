@@ -36,7 +36,7 @@ module Eumets
       tasklists = call_api(@tasks_client.tasklists.list, options)[:items]
       tasklists.inject([]) do |tasks, tasklist|
         call_api(@tasks_client.tasks.list, tasklist: tasklist[:id])[:items].each do |task|
-          tasks << Task.new(task)
+          tasks << Task.new(tasklist[:id], task)
         end
 
         tasks
