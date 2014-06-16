@@ -8,8 +8,12 @@ module Eumets
       self.tasklist_id = tasklist_id
     end
 
+    def completed?
+      self.status == "completed"
+    end
+
     def status_icon
-      self.status == "completed" ? "x" : "-"
+      completed? ? "x" : "-"
     end
   end
 end

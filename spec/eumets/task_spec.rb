@@ -46,17 +46,49 @@ module Eumets
       end
     end
 
+    let(:task) do
+      described_class.new(tasklist_id, arg)
+    end
+
+    describe "#completed?" do
+      context "when complete status is true" do
+        let(:arg) do
+          completed_params
+        end
+
+        it "should return true" do
+          expect(task.completed?).to be true
+        end
+      end
+
+      context "when complete status is false" do
+        let(:arg) do
+          incompleted_params
+        end
+
+        it "should return false" do
+          expect(task.completed?).to be false
+        end
+      end
+    end
+
     describe "#status_icon" do
-      context "when the complete status is true" do
+      context "when complete status is true" do
+        let(:arg) do
+          completed_params
+        end
+
         it "should return x" do
-          task = described_class.new(tasklist_id, completed_params)
           expect(task.status_icon).to eq "x"
         end
       end
 
-      context "when the complete status is false" do
+      context "when complete status is false" do
+        let(:arg) do
+          incompleted_params
+        end
+
         it "should return -" do
-          task = described_class.new(tasklist_id, incompleted_params)
           expect(task.status_icon).to eq "-"
         end
       end
