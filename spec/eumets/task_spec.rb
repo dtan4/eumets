@@ -18,41 +18,59 @@ module Eumets
        parent: "parent",
        method: "method",
        notes: "notes",
-       status: "completed",
-       due: "2014-05-18",
+       status: status,
+       due: due,
        hidden: false,
        links: []
       }
     end
 
-    let(:completed_params) do
-      params[:status] = "completed"
-      params
-    end
-
-    let(:incompleted_params) do
-      params[:status] = "needsAction"
-      params
+    let(:task) do
+      described_class.new(tasklist_id, params)
     end
 
     describe "#initialize" do
-      it "should set instance variables" do
-        task = described_class.new(tasklist_id, completed_params)
-        expect(task.id).to eq "id"
-        expect(task.title).to eq "title"
-        expect(task.updated).to eq Time.parse("2014-05-18")
-        expect(task.notes).to eq "notes"
+      let(:status) do
+        "completed"
+      end
+
+      context "deadline is given" do
+        let(:due) do
+          "2014-05-18"
+        end
+
+        it "should set instance variables" do
+          task = described_class.new(tasklist_id, params)
+          expect(task.id).to eq "id"
+          expect(task.title).to eq "title"
+          expect(task.updated).to eq Time.parse("2014-05-18")
+          expect(task.notes).to eq "notes"
+        end
+      end
+
+      context "deadline is not given" do
+        let(:due) do
+          nil
+        end
+
+        it "should set instance variables" do
+          task = described_class.new(tasklist_id, params)
+          expect(task.id).to eq "id"
+          expect(task.title).to eq "title"
+          expect(task.updated).to eq Time.parse("2014-05-18")
+          expect(task.notes).to eq "notes"
+        end
       end
     end
 
-    let(:task) do
-      described_class.new(tasklist_id, arg)
-    end
-
     describe "#completed?" do
+      let(:due) do
+        "2014-05-18"
+      end
+
       context "when complete status is true" do
-        let(:arg) do
-          completed_params
+        let(:status) do
+          "completed"
         end
 
         it "should return true" do
@@ -61,8 +79,8 @@ module Eumets
       end
 
       context "when complete status is false" do
-        let(:arg) do
-          incompleted_params
+        let(:status) do
+          "incompleted"
         end
 
         it "should return false" do
@@ -72,9 +90,13 @@ module Eumets
     end
 
     describe "#status_icon" do
+      let(:due) do
+        "2014-05-18"
+      end
+
       context "when complete status is true" do
-        let(:arg) do
-          completed_params
+        let(:status) do
+          "completed"
         end
 
         it "should return x" do
@@ -83,8 +105,8 @@ module Eumets
       end
 
       context "when complete status is false" do
-        let(:arg) do
-          incompleted_params
+        let(:status) do
+          "incompleted"
         end
 
         it "should return -" do
