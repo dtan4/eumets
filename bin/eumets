@@ -5,6 +5,10 @@ require "time"
 
 client = Eumets::Cli.new
 client.authorize!
-client.list.each do |task|
+tasklist = client.list
+with_due = tasklist.select { |task| task.due }
+without_due = tasklist.select { |task| task.due.nil? }
+
+(with_due.sort_by(&:due) + without_due).each do |task|
   task.show
 end
