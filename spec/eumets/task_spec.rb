@@ -40,9 +40,8 @@ module Eumets
         task = described_class.new(tasklist_id, completed_params)
         expect(task.id).to eq "id"
         expect(task.title).to eq "title"
-        expect(task.updated).to eq "2014-05-18"
+        expect(task.updated).to eq Time.parse("2014-05-18")
         expect(task.notes).to eq "notes"
-        expect(task.status).to eq "completed"
       end
     end
 

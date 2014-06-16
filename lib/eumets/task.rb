@@ -1,23 +1,34 @@
-require "ostruct"
 require "rainbow"
 require "time"
 
 module Eumets
-  class Task < OpenStruct
+  class Task
+    STRING_KEYS = %i(kind id etag title selfLink parent position notes status)
+    DATETIME_KEYS = %i(updated due completed)
+    BOOL_KEYS = %i(deleted hidden)
+
     def initialize(tasklist_id, params)
-      super(params)
-      # self.tasklist_id = tasklist_id
+      @params = params
+      @tasklist_id = tasklist_id
+    end
+
+    (STRING_KEYS + BOOL_KEYS).each do |key|
+      define_method(key) { @params[key] }
+    end
+
+    DATETIME_KEYS.each do |key|
+      define_method(key) { Time.parse(@params[key]) }
     end
 
     def completed?
-      self.status == "completed"
+      status == "completed"
     end
 
     def show
       text = if completed?
-               Rainbow("#{status_icon}, #{self.due}, #{self.title}").green
+               Rainbow("#{status_icon}, #{due}, #{title}").green
              else
-               Rainbow("#{status_icon}, ").red + Rainbow("#{self.due}").red.bright + Rainbow(", #{self.title}").red
+               Rainbow("#{status_icon}, ").red + Rainbow("#{due}").red.bright + Rainbow(", #{title}").red
              end
 
       puts text
