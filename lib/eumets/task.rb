@@ -24,11 +24,17 @@ module Eumets
       status == "completed"
     end
 
+    def show_date(datetime)
+      datetime ? datetime.strftime("%Y-%m-%d") : " " * (4 + 1 + 2 + 1 + 2)
+    end
+
     def show
       text = if completed?
-               Rainbow("#{status_icon}, #{due}, #{title}").green
+               completed_text
+             elsif due && (Time.now > due)
+               expired_text
              else
-               Rainbow("#{status_icon}, ").red + Rainbow("#{due}").red.bright + Rainbow(", #{title}").red
+               incompleted_text
              end
 
       puts text
@@ -36,6 +42,20 @@ module Eumets
 
     def status_icon
       completed? ? "x" : "-"
+    end
+
+    private
+
+    def completed_text
+      Rainbow("#{status_icon} #{show_date(due)} #{title}").green
+    end
+
+    def expired_text
+      Rainbow("#{status_icon} ").red + Rainbow("#{show_date(due)}").red.bright + Rainbow(" #{title}").red
+    end
+
+    def incompleted_text
+      Rainbow("#{status_icon} ").magenta + Rainbow("#{show_date(due)}").magenta.bright + Rainbow(" #{title}").magenta
     end
   end
 end
