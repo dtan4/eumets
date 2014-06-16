@@ -17,7 +17,7 @@ module Eumets
     end
 
     DATETIME_KEYS.each do |key|
-      define_method(key) { Time.parse(@params[key]) }
+      define_method(key) { @params[key] ? Time.parse(@params[key]) : nil }
     end
 
     def completed?

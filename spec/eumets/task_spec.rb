@@ -43,7 +43,7 @@ module Eumets
           task = described_class.new(tasklist_id, params)
           expect(task.id).to eq "id"
           expect(task.title).to eq "title"
-          expect(task.updated).to eq Time.parse("2014-05-18")
+          expect(task.due).to eq Time.parse("2014-05-18")
           expect(task.notes).to eq "notes"
         end
       end
@@ -57,7 +57,7 @@ module Eumets
           task = described_class.new(tasklist_id, params)
           expect(task.id).to eq "id"
           expect(task.title).to eq "title"
-          expect(task.updated).to eq Time.parse("2014-05-18")
+          expect(task.due).to eq nil
           expect(task.notes).to eq "notes"
         end
       end
