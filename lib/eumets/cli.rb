@@ -6,6 +6,8 @@ require "json"
 
 module Eumets
   class Cli
+    include Util
+
     OAUTH_SCOPE = "https://www.googleapis.com/auth/tasks"
 
     def initialize
@@ -51,13 +53,6 @@ module Eumets
 
     def get_tasks_client
       @api_client.discovered_api("tasks", "v1")
-    end
-
-    def call_api(method, options = {})
-      JSON.parse(
-                 @api_client.execute(method, options).response.body,
-                 symbolize_names: true
-                )
     end
   end
 end
