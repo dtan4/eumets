@@ -35,14 +35,7 @@ module Eumets
     end
 
     def list(options = {})
-      tasklists = call_api(@tasks_client.tasklists.list, options)[:items]
-      tasklists.inject([]) do |tasks, tasklist|
-        call_api(@tasks_client.tasks.list, tasklist: tasklist[:id])[:items].each do |task|
-          tasks << Task.new(tasklist[:id], task)
-        end
-
-        tasks
-      end.flatten
+      Eumets::Task.find_by(@api_client, @tasks_client, options)
     end
 
     private

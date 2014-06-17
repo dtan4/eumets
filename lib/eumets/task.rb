@@ -3,9 +3,26 @@ require "time"
 
 module Eumets
   class Task
+    include Util
+    extend Util
+
     STRING_KEYS = %i(kind id etag title selfLink parent position notes status)
     DATETIME_KEYS = %i(updated due completed)
     BOOL_KEYS = %i(deleted hidden)
+
+    def self.all(api_client, tasks_client)
+      self.find_by(api_client, tasks_client, {})
+    end
+
+    def self.find_by(api_client, tasks_client, options = {})
+      tasklists(api_client, tasks_client).inject([]) do |tasks, tasklist|
+        taskitems(api_client, tasks_client, tasklist, options).each do |task|
+          tasks << Task.new(tasklist[:id], task)
+        end
+
+        tasks
+      end.flatten
+    end
 
     def initialize(tasklist_id, params)
       @params = params
@@ -45,6 +62,14 @@ module Eumets
     end
 
     private
+
+    def self.tasklists(api_client, tasks_client)
+      call_api(api_client, tasks_client.tasklists.list, {})[:items]
+    end
+
+    def self.taskitems(api_client, tasks_client, tasklist, options)
+      call_api(api_client, tasks_client.tasks.list, options.merge(tasklist: tasklist[:id]))[:items]
+    end
 
     def completed_text
       Rainbow("#{status_icon} #{show_date(due)} #{title}").green

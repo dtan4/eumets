@@ -29,16 +29,45 @@ module Eumets
       described_class.new(tasklist_id, params)
     end
 
-    describe "#initialize" do
-      let(:status) do
-        "completed"
+    let(:due) do
+      "2014-05-18"
+    end
+
+    let(:status) do
+      "completed"
+    end
+
+    describe "#find_by" do
+      let(:api_client) do
+        double("api_client")
       end
 
-      context "deadline is given" do
-        let(:due) do
-          "2014-05-18"
-        end
+      let(:tasks_client) do
+        double("tasks_client")
+      end
 
+      let(:options) do
+        { showCompleted: false }
+      end
+
+      let(:tasklist) do
+        { id: "id" }
+      end
+
+      before do
+        allow(described_class).to receive(:tasklists).and_return([tasklist])
+        allow(described_class).to receive(:taskitems).and_return([])
+      end
+
+      it "should get incompleted task list" do
+        expect(described_class).to receive(:tasklists).with(api_client, tasks_client)
+        expect(described_class).to receive(:taskitems).with(api_client, tasks_client, tasklist, options).once
+        described_class.find_by(api_client, tasks_client, options)
+      end
+    end
+
+    describe "#initialize" do
+      context "deadline is given" do
         it "should set instance variables" do
           task = described_class.new(tasklist_id, params)
           expect(task.id).to eq "id"
@@ -64,15 +93,7 @@ module Eumets
     end
 
     describe "#completed?" do
-      let(:due) do
-        "2014-05-18"
-      end
-
       context "when complete status is true" do
-        let(:status) do
-          "completed"
-        end
-
         it "should return true" do
           expect(task.completed?).to be true
         end
@@ -90,15 +111,7 @@ module Eumets
     end
 
     describe "#status_icon" do
-      let(:due) do
-        "2014-05-18"
-      end
-
       context "when complete status is true" do
-        let(:status) do
-          "completed"
-        end
-
         it "should return x" do
           expect(task.status_icon).to eq "x"
         end
