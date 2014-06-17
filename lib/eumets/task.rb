@@ -10,6 +10,12 @@ module Eumets
     DATETIME_KEYS = %i(updated due completed)
     BOOL_KEYS = %i(deleted hidden)
 
+    def self.add(api_client, tasks_client, options)
+      tasklists(api_client, tasks_client).each do |tasklist|
+        insert_task(api_client, tasks_client, tasklist, options)
+      end
+    end
+
     def self.all(api_client, tasks_client)
       self.find_by(api_client, tasks_client, {})
     end
@@ -62,6 +68,10 @@ module Eumets
     end
 
     private
+
+    def self.insert_task(api_client, tasks_client, tasklist, options)
+      call_api(api_client, tasks_client.tasks.insert, options.merge(tasklist: tasklist[:id]))
+    end
 
     def self.tasklists(api_client, tasks_client)
       call_api(api_client, tasks_client.tasklists.list, {})[:items]

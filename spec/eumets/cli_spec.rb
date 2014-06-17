@@ -35,5 +35,35 @@ module Eumets
         end
       end
     end
+
+    describe "#add" do
+      let(:add) do
+        cli.add
+      end
+
+      before do
+        allow(Eumets::Task).to receive(:add).and_return(nil)
+      end
+
+      context "authorized" do
+        before do
+          allow_any_instance_of(described_class).to receive(:authorized?).and_return(true)
+        end
+
+        it "should not raise any Exception" do
+          expect { add }.not_to raise_error
+        end
+      end
+
+      context "unauthorized" do
+        before do
+          allow_any_instance_of(described_class).to receive(:authorized?).and_return(false)
+        end
+
+        it "should raise UnauthorizedException" do
+          expect { add }.to raise_error UnauthorizedException
+        end
+      end
+    end
   end
 end

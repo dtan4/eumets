@@ -37,23 +37,36 @@ module Eumets
       "completed"
     end
 
+    let(:api_client) do
+      double("api_client")
+    end
+
+    let(:tasks_client) do
+      double("tasks_client")
+    end
+
+    let(:options) do
+      { showCompleted: false }
+    end
+
+    let(:tasklist) do
+      { id: "id" }
+    end
+
+    describe "#all" do
+      before do
+        allow(described_class).to receive(:tasklists).and_return([tasklist])
+        allow(described_class).to receive(:insert_task).and_return(nil)
+      end
+
+      it "should add new task" do
+        expect(described_class).to receive(:tasklists).with(api_client, tasks_client)
+        expect(described_class).to receive(:insert_task).with(api_client, tasks_client, tasklist, options).once
+        described_class.add(api_client, tasks_client, options)
+      end
+    end
+
     describe "#find_by" do
-      let(:api_client) do
-        double("api_client")
-      end
-
-      let(:tasks_client) do
-        double("tasks_client")
-      end
-
-      let(:options) do
-        { showCompleted: false }
-      end
-
-      let(:tasklist) do
-        { id: "id" }
-      end
-
       before do
         allow(described_class).to receive(:tasklists).and_return([tasklist])
         allow(described_class).to receive(:taskitems).and_return([])
