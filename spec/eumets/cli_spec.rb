@@ -3,7 +3,7 @@ require "spec_helper"
 module Eumets
   describe Cli do
     let(:cli) do
-      described_class.new
+      described_class.new(false)
     end
 
     shared_context "authorized" do
