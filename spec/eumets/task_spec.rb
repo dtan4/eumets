@@ -1,4 +1,5 @@
 require "spec_helper"
+require "rainbow"
 require "time"
 
 module Eumets
@@ -106,13 +107,13 @@ module Eumets
     end
 
     describe "#completed?" do
-      context "when complete status is true" do
+      context "completed" do
         it "should return true" do
           expect(task.completed?).to be true
         end
       end
 
-      context "when complete status is false" do
+      context "incompleted" do
         let(:status) do
           "incompleted"
         end
@@ -123,20 +124,43 @@ module Eumets
       end
     end
 
-    describe "#status_icon" do
-      context "when complete status is true" do
-        it "should return x" do
-          expect(task.status_icon).to eq "x"
+    describe "#show" do
+      let(:stdout) do
+        double
+      end
+
+      before do
+        allow(stdout).to receive(:puts)
+      end
+
+      context "completed" do
+        it "should print task" do
+          expect(stdout).to receive(:puts).with(Rainbow("x 2014-05-18 title").green)
+          task.show(stdout)
         end
       end
 
-      context "when complete status is false" do
+      context "expired" do
         let(:status) do
           "incompleted"
         end
 
-        it "should return -" do
-          expect(task.status_icon).to eq "-"
+        it "should print task" do
+          allow(task).to receive(:expired?).and_return(true)
+          expect(stdout).to receive(:puts).with(Rainbow("- ").red + Rainbow("2014-05-18").red.bright + Rainbow(" title").red)
+          task.show(stdout)
+        end
+      end
+
+      context "incompleted" do
+        let(:status) do
+          "incompleted"
+        end
+
+        it "should print task" do
+          allow(task).to receive(:expired?).and_return(false)
+          expect(stdout).to receive(:puts).with("- 2014-05-18 title")
+          task.show(stdout)
         end
       end
     end

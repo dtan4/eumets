@@ -47,24 +47,16 @@ module Eumets
       status == "completed"
     end
 
-    def show_date(datetime)
-      datetime ? datetime.strftime("%Y-%m-%d") : " " * (4 + 1 + 2 + 1 + 2)
-    end
-
-    def show
+    def show(out)
       text = if completed?
                completed_text
-             elsif due && (Time.now > due)
+             elsif expired?
                expired_text
              else
                incompleted_text
              end
 
-      puts text
-    end
-
-    def status_icon
-      completed? ? "x" : "-"
+      out.puts text
     end
 
     private
@@ -81,6 +73,18 @@ module Eumets
       call_api(api_client, tasks_client.tasks.list, options.merge(tasklist: tasklist[:id]))[:items]
     end
 
+    def expired?
+      due && (Time.now > due)
+    end
+
+    def status_icon
+      completed? ? "x" : "-"
+    end
+
+    def show_date(datetime)
+      datetime ? datetime.strftime("%Y-%m-%d") : " " * (4 + 1 + 2 + 1 + 2)
+    end
+
     def completed_text
       Rainbow("#{status_icon} #{show_date(due)} #{title}").green
     end
@@ -90,7 +94,7 @@ module Eumets
     end
 
     def incompleted_text
-      Rainbow("#{status_icon} ").magenta + Rainbow("#{show_date(due)}").magenta.bright + Rainbow(" #{title}").magenta
+      "#{status_icon} #{show_date(due)} #{title}"
     end
   end
 end
