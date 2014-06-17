@@ -4,7 +4,6 @@ require "eumets"
 require "time"
 
 client = Eumets::Cli.new
-client.authorize!
 tasklist = client.list
 with_due = tasklist.select { |task| task.due }
 without_due = tasklist.select { |task| task.due.nil? }
