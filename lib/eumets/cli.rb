@@ -1,9 +1,5 @@
-require "json"
-
 module Eumets
   class Cli
-    include Util
-
     def initialize(auth = true)
       @api_client, @tasks_client = Eumets::Auth.authorize if auth
     end

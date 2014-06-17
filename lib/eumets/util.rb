@@ -1,3 +1,5 @@
+require "json"
+
 module Eumets
   module Util
     def call_api(api_client, method, options = {})
