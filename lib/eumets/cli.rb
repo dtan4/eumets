@@ -35,6 +35,7 @@ module Eumets
     end
 
     def list(options = {})
+      raise UnauthorizedException unless authorized?
       Eumets::Task.find_by(@api_client, @tasks_client, options)
     end
 
@@ -48,4 +49,6 @@ module Eumets
       @api_client.discovered_api("tasks", "v1")
     end
   end
+
+  class UnauthorizedException < Exception; end
 end
